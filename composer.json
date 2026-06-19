@@ -3,7 +3,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -66,6 +69,12 @@
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+        ],
+        "dev2": [
+            "@php artisan serve --host 192.168.31.117 --port 8050"
+        ],
+        "dev-home": [
+            "@php artisan serve --host 192.168.31.117 --port 8050"
         ]
     },
     "extra": {
