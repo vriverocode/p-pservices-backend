@@ -71,7 +71,7 @@
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ],
         "dev2": [
-            "@php artisan serve --host 192.168.31.117 --port 8050"
+            "@php artisan serve --host 192.168.1.234 --port 8050 "
         ],
         "dev-home": [
             "@php artisan serve --host 192.168.31.117 --port 8050"
@@ -83,6 +83,7 @@
         }
     },
     "config": {
+        "process-timeout": 0,
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
