@@ -8,13 +8,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Events\Verified;
 
 class AuthController extends Controller
 {
+    public function getCurrentUser(Request $request)
+    {
+        return $this->returnSuccess(200, $request->user());
+    }
+
     public function register(Request $request)
     {
         $errors = $this->validateFieldsFromInput($request->all(), 'register');
-        if (count($errors) > 0) return $this->returnFail(400, $errors[0]);
+        if (count($errors) > 0) {
+            return $this->returnFail(400, $errors[0]);
+        }
 
         $input = $request->only(['name', 'email', 'password', 'phone']);
 
@@ -25,6 +34,8 @@ class AuthController extends Controller
             'password' => Hash::make($input['password']),
         ]);
 
+        event(new Registered($user));
+
         return $this->returnSuccess(201, [
             'message' => 'Usuario registrado exitosamente',
             'user'    => $user
@@ -34,27 +45,26 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $errors = $this->validateFieldsFromInput($request->all(), 'login');
-        if (count($errors) > 0) return $this->returnFail(400, $errors[0]);
-
+        if (count($errors) > 0) {
+            return $this->returnFail(400, $errors[0]);
+        }
         $input = $request->only(['email', 'password']);
 
-        if (!Auth::attempt(['email' => $input['email'], 'password' => $input['password']])) {
-            return $this->returnFail(401, 'Las credenciales proporcionadas son incorrectas.');
+        $user = User::where('email', $input['email'])->first();
+
+        if (!$user || !Hash::check($input['password'], $user->password)) {
+            return $this->returnFail(401, 'login.error_msg');
         }
 
-        $user = User::where('email', $input['email'])->firstOrFail();
-
-        if ($request->has('device_name')) {
-            $token = $user->createToken($input['device_name'])->plainTextToken;
-            return $this->returnSuccess(200, [
-                'token' => $token,
-                'user'  => $user
-            ]);
+        if (!$user->hasVerifiedEmail()) {
+            return $this->returnFail(403, 'login.unverified_email');
         }
+        $token = $user->createToken('auth-token')->plainTextToken;
 
         return $this->returnSuccess(200, [
-            'message' => 'Login exitoso vía cookie',
-            'user'    => $user
+            'token'   => $token,
+            'user'    => $user,
+            'message' => 'Login exitoso'
         ]);
     }
 
@@ -63,10 +73,6 @@ class AuthController extends Controller
         if ($request->bearerToken()) {
             $request->user()->currentAccessToken()->delete();
         }
-
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
         return $this->returnSuccess(200, ['message' => 'Sesión cerrada correctamente']);
     }

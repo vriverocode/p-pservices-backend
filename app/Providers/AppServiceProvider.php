@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Auth\Notifications\VerifyEmail;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +23,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        VerifyEmail::createUrlUsing(function ($notifiable) {
+            $verifyUrl = URL::temporarySignedRoute(
+                'verification.verify',
+                Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+                [
+                    'id' => $notifiable->getKey(),
+                    'hash' => sha1($notifiable->getEmailForVerification()),
+                ]
+            );
+            // Cambiamos el dominio del backend por el del frontend
+            $frontendUrl = env('FRONTEND_URL', 'http://localhost:8051');
+            
+            // Esto enviará al usuario a: http://tu-frontend/verify-email?verify_url=...
+            return $frontendUrl . '/verify-email?verify_url=' . urlencode($verifyUrl);
+        });
     }
 }
