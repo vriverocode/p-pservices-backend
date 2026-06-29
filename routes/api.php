@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ServicesController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,4 +15,8 @@ Route::post('/email/resend', [UserController::class, 'resendVerificationEmail'])
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'getCurrentUser']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::prefix('services')->group(function () {
+        Route::get('/', [ServicesController::class, 'index']);
+    });
 });
