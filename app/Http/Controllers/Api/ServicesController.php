@@ -14,7 +14,8 @@ class ServicesController extends Controller
      */
     public function index()
     {
-        $services = Service::select('name', 'description', 'requires_quote', 'thumbnail_url', 'is_active', 'configurable_options')
+        $services = Service::with(['pricing'])
+        ->select('id', 'name', 'description', 'requires_quote', 'thumbnail_url', 'is_active', 'configurable_options')
         ->where('is_active', true)
         ->orderBy('sort_order', 'asc')
         ->get();
@@ -24,7 +25,7 @@ class ServicesController extends Controller
                 'message' => 'no_found',
             ], 404);
         }
-        return $this->returnSuccess(200, ServiceResource::collection($services));
+        return $this->returnSuccess(200, $services);
     }
 
     /**

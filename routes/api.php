@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ServicesController;
 use App\Http\Controllers\Api\UserController;
@@ -18,5 +19,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('services')->group(function () {
         Route::get('/', [ServicesController::class, 'index']);
+    });
+
+    Route::prefix('ads')->group(function () {
+        Route::get('/', [AdController::class, 'index']);
     });
 });

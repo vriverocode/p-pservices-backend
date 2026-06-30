@@ -16,6 +16,16 @@ class Service extends Model
 
     protected $guarded = ['id'];
 
+    protected $fillable = [
+        'name',
+        'description',
+        'requires_quote',
+        'thumbnail_url',
+        'is_active',
+        'sort_order',
+        'configurable_options',
+    ];
+
     protected $casts = [
         'is_active' => 'boolean',
         'sort_order' => 'integer',
@@ -25,6 +35,6 @@ class Service extends Model
 
     public function pricing(): HasMany
     {
-        return $this->hasMany(ServicePricing::class);
+        return $this->hasMany(ServicePricing::class, 'service_id')->orderBy('price', 'asc');
     }
 }
