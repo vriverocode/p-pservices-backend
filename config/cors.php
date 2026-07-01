@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:8051'), 'https://localhost:8051', 'https://192.168.1.246:8051'],
+    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:8051'), 'https://localhost:8051', 'https://192.168.1.246:8051', 'https://192.168.31.117:8051'],
 
     'allowed_origins_patterns' => [],
 

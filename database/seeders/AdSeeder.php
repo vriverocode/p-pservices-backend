@@ -18,7 +18,7 @@ class AdSeeder extends Seeder
                 'is_active' => true,
                 'type' => 1,
                 'display_order' => 1,
-                'bg_color' => '#0a2540',
+                'color' => '#0a2540',
                 'text_color' => '#ffffff',
             ],
             [
@@ -29,7 +29,7 @@ class AdSeeder extends Seeder
                 'is_active' => true,
                 'type' => 1,
                 'display_order' => 2,
-                'bg_color' => '#162438',
+                'color' => '#162438',
                 'text_color' => '#ffffff',
             ],
             [
@@ -40,7 +40,7 @@ class AdSeeder extends Seeder
                 'is_active' => true,
                 'type' => 1,
                 'display_order' => 3,
-                'bg_color' => '#005bc4',
+                'color' => '#005bc4',
                 'text_color' => '#ffffff',
             ],
             [
@@ -51,7 +51,7 @@ class AdSeeder extends Seeder
                 'is_active' => true,
                 'type' => 2,
                 'display_order' => 4,
-                'bg_color' => '#eb0606',
+                'color' => '#eb0606',
                 'text_color' => '#ffffff',
             ],
             [
@@ -62,7 +62,7 @@ class AdSeeder extends Seeder
                 'is_active' => true,
                 'type' => 1,
                 'display_order' => 5,
-                'bg_color' => '#1d1d1d',
+                'color' => '#1d1d1d',
                 'text_color' => '#ffffff',
             ],
             [
@@ -73,7 +73,7 @@ class AdSeeder extends Seeder
                 'is_active' => true,
                 'type' => 2,
                 'display_order' => 6,
-                'bg_color' => '#53637a',
+                'color' => '#53637a',
                 'text_color' => '#ffffff',
             ],
             [
@@ -84,7 +84,7 @@ class AdSeeder extends Seeder
                 'is_active' => true,
                 'type' => 1,
                 'display_order' => 7,
-                'bg_color' => '#9d0a0e',
+                'color' => '#9d0a0e',
                 'text_color' => '#ffffff',
             ],
         ];
