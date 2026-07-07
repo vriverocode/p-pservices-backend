@@ -15,7 +15,7 @@ class AuthController extends Controller
 {
     public function getCurrentUser(Request $request)
     {
-        return $this->returnSuccess(200, $request->user());
+        return $this->returnSuccess(200, $request->user()->load('rol'));
     }
 
     public function register(Request $request)
@@ -32,6 +32,7 @@ class AuthController extends Controller
             'email'    => $input['email'],
             'phone'    => $input['phone'] ?? null,
             'password' => Hash::make($input['password']),
+            'rol_id'   => 2,
         ]);
 
         event(new Registered($user));
@@ -63,7 +64,7 @@ class AuthController extends Controller
 
         return $this->returnSuccess(200, [
             'token'   => $token,
-            'user'    => $user,
+            'user'    => $user->load('rol'),
             'message' => 'Login exitoso'
         ]);
     }
