@@ -60,7 +60,7 @@ class AuthController extends Controller
         if (!$user->hasVerifiedEmail()) {
             return $this->returnFail(403, 'login.unverified_email');
         }
-        $token = $user->createToken('auth-token')->plainTextToken;
+        $token = $user->createToken('auth-token', ['client:read'])->plainTextToken;
 
         return $this->returnSuccess(200, [
             'token'   => $token,

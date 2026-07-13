@@ -14,7 +14,15 @@ class Vehicle extends Model
     use SoftDeletes;
     use HasUlid;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'vehicle_model_id',
+        'year',
+        'plate',
+        'color',
+        'alias',
+        'is_primary',
+        'user_id',
+    ];
 
     protected $casts = [
         'is_primary' => 'boolean',

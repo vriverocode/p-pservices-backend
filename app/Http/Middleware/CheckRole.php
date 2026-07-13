@@ -12,7 +12,7 @@ class CheckRole
     {
         $user = $request->user();
 
-        if (!$user || !$user->rol || $user->rol->name !== $role) {
+        if (!$user || !$user->rol || strtolower($user->rol->name) !== strtolower($role)) {
             abort(403, 'Unauthorized');
         }
 

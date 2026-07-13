@@ -23,6 +23,7 @@ class Service extends Model
         'thumbnail_url',
         'is_active',
         'sort_order',
+        'slug',
         'configurable_options',
     ];
 

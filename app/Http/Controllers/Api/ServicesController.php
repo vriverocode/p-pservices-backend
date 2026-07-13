@@ -9,70 +9,51 @@ use App\Http\Resources\ServiceResource;
 
 class ServicesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $services = Service::with(['pricing'])
-        ->select('id', 'name', 'description', 'requires_quote', 'thumbnail_url', 'is_active', 'configurable_options')
-        ->where('is_active', true)
-        ->orderBy('sort_order', 'asc')
-        ->get();
+            ->where('is_active', true)
+            ->where(function ($q) {
+                $q->whereHas('pricing')
+                  ->orWhere('requires_quote', true);
+            })
+            ->orderBy('sort_order', 'asc')
+            ->get();
 
         if ($services->isEmpty()) {
-            return response()->json([
-                'message' => 'no_found',
-            ], 404);
+            return $this->returnFail(404, 'No services found');
         }
-        return $this->returnSuccess(200, $services);
+
+        return $this->returnSuccess(200, ServiceResource::collection($services));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(Service $service)
     {
-        //
+        if (!$service->is_active) {
+            return $this->returnFail(404, 'Service not found');
+        }
+
+        $service->load(['pricing.vehicleCategory']);
+        return $this->returnSuccess(200, new ServiceResource($service));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function price(Request $request, Service $service)
     {
-        //
-    }
+        $request->validate([
+            'vehicle_category_id' => 'required|exists:vehicle_categories,id',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $pricing = $service->pricing()
+            ->where('vehicle_category_id', $request->vehicle_category_id)
+            ->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        if (!$pricing) {
+            return $this->returnFail(404, 'No pricing found for this category');
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return $this->returnSuccess(200, [
+            'price' => $pricing->price,
+            'duration_minutes' => $pricing->duration_minutes,
+        ]);
     }
 }

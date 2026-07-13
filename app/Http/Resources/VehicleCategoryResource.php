@@ -15,7 +15,7 @@ class VehicleCategoryResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->ulid,
+            'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
             'icon' => $this->icon,

@@ -35,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'rol_id',
     ];
 
     /**
@@ -48,5 +49,15 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function rol()
+    {
+        return $this->belongsTo(Rol::class);
+    }
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
     }
 }

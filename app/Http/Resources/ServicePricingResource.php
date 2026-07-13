@@ -17,7 +17,7 @@ class ServicePricingResource extends JsonResource
         return [
             'id' => $this->ulid,
             'service_id' => $this->service_id,
-            'vehicle_category' => VehicleCategoryResource::collection($this->whenLoaded('vehicleCategory')),
+            'vehicle_category' => new VehicleCategoryResource($this->whenLoaded('vehicleCategory')),
             'price' => $this->price,
             'duration_minutes' => $this->duration_minutes
         ];
