@@ -34,6 +34,26 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        RateLimiter::for('forgot-password', function (Request $request) {
+            $key = $request->ip() . '|' . ($request->input('email', ''));
+            return Limit::perMinute(3)->by($key)->response(function () {
+                return response()->json([
+                    'code' => 429,
+                    'error' => 'forgot.error_throttle',
+                ], 429);
+            });
+        });
+
+        RateLimiter::for('reset-password', function (Request $request) {
+            $key = $request->ip() . '|' . ($request->input('email', ''));
+            return Limit::perMinute(5)->by($key)->response(function () {
+                return response()->json([
+                    'code' => 429,
+                    'error' => 'reset.error_throttle',
+                ], 429);
+            });
+        });
+
         VerifyEmail::createUrlUsing(function ($notifiable) {
             $verifyUrl = URL::temporarySignedRoute(
                 'verification.verify',
